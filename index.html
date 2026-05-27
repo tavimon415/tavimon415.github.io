@@ -1,0 +1,1300 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tatiana Villa-Montoya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f4ede4;
+    --bg-2: #ebe1d4;
+    --bg-3: #e2d5c2;
+    --ink: #2a201a;
+    --ink-2: #4a3d33;
+    --muted: #7a6258;
+    --muted-2: #a08a7c;
+    --line: #d8c9b6;
+    --terra: #b8442d;
+    --terra-deep: #8e2f1c;
+    --terra-soft: #d9876f;
+    --sage: #6b7355;
+    --paper: #faf6ef;
+
+    --serif: "Instrument Serif", "Cormorant Garamond", Georgia, serif;
+    --sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+    --maxw: 1100px;
+    --pad-x: clamp(24px, 5vw, 80px);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Subtle paper grain */
+  body::before {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      radial-gradient(rgba(120, 80, 50, 0.04) 1px, transparent 1px),
+      radial-gradient(rgba(120, 80, 50, 0.025) 1px, transparent 1px);
+    background-size: 3px 3px, 7px 7px;
+    background-position: 0 0, 1px 2px;
+    opacity: 0.7;
+    mix-blend-mode: multiply;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: var(--terra); color: var(--paper); }
+
+  /* ─── Top nav ────────────────────────────────────────────── */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    padding: 22px var(--pad-x);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(to bottom, var(--bg) 60%, transparent);
+    backdrop-filter: blur(0px);
+    transition: padding 200ms ease, background 200ms ease;
+  }
+  .nav.scrolled {
+    padding-top: 14px;
+    padding-bottom: 14px;
+    background: rgba(244, 237, 228, 0.92);
+    backdrop-filter: saturate(140%) blur(8px);
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+  .mark {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 24px;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .mark .dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--terra);
+    transform: translateY(-2px);
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .nav-links {
+    display: flex;
+    gap: 26px;
+    align-items: center;
+  }
+  .nav-links a {
+    font-size: 13px;
+    color: var(--ink-2);
+    letter-spacing: 0.02em;
+    position: relative;
+    transition: color 180ms ease;
+  }
+  .nav-links a:hover { color: var(--terra); }
+  .nav-links a::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 100%;
+    bottom: -4px;
+    height: 1px;
+    background: var(--terra);
+    transition: right 240ms ease;
+  }
+  .nav-links a:hover::after { right: 0; }
+
+  .lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 3px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    position: relative;
+  }
+  .lang-toggle button {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 999px;
+    cursor: pointer;
+    font: inherit;
+    letter-spacing: 0.08em;
+    transition: color 200ms ease;
+    z-index: 1;
+    position: relative;
+  }
+  .lang-toggle button.active { color: var(--paper); }
+  .lang-toggle .pill {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    width: calc(50% - 3px);
+    background: var(--terra);
+    border-radius: 999px;
+    transition: transform 260ms cubic-bezier(0.5, 0, 0.2, 1);
+    z-index: 0;
+  }
+  .lang-toggle[data-lang="es"] .pill { transform: translateX(100%); }
+
+  @media (max-width: 680px) {
+    .nav-links { display: none; }
+  }
+
+  /* ─── Sections ────────────────────────────────────────────── */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 var(--pad-x);
+  }
+
+  section {
+    padding: 120px 0 80px;
+    border-top: 1px solid transparent;
+  }
+  section + section { border-top-color: var(--line); }
+
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--terra);
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .eyebrow::before {
+    content: "";
+    display: inline-block;
+    width: 24px; height: 1px;
+    background: var(--terra);
+  }
+
+  /* ─── Hero ────────────────────────────────────────────────── */
+  .hero {
+    min-height: 100vh;
+    padding-top: 140px;
+    padding-bottom: 80px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    align-content: center;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 0.5fr;
+    gap: 60px;
+    align-items: end;
+  }
+  @media (max-width: 880px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(56px, 9vw, 132px);
+    line-height: 0.92;
+    letter-spacing: -0.015em;
+    margin: 0;
+    color: var(--ink);
+  }
+  .hero h1 .italic {
+    font-style: italic;
+    color: var(--terra);
+  }
+  .hero .lede {
+    font-family: var(--serif);
+    font-size: clamp(20px, 2.4vw, 28px);
+    line-height: 1.35;
+    color: var(--ink-2);
+    max-width: 28ch;
+    margin: 0;
+  }
+  .hero .meta {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-left: 1px solid var(--line);
+    padding-left: 20px;
+  }
+  .hero .meta strong {
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: 0;
+    display: block;
+    font-size: 14px;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  .hero-tag .pulse {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--sage);
+    box-shadow: 0 0 0 0 rgba(107, 115, 85, 0.5);
+    animation: pulse 2.4s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(107, 115, 85, 0.5); }
+    70% { box-shadow: 0 0 0 12px rgba(107, 115, 85, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(107, 115, 85, 0); }
+  }
+
+  .scroll-cue {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 40px;
+  }
+  .scroll-cue svg {
+    animation: bob 2.2s ease-in-out infinite;
+  }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(4px); }
+  }
+
+  /* ─── About ────────────────────────────────────────────────── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 60px;
+    align-items: start;
+    margin-top: 40px;
+  }
+  @media (max-width: 760px) {
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+  }
+  .about-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1;
+    margin: 18px 0 0;
+    color: var(--ink);
+  }
+  .about-title .italic { font-style: italic; color: var(--terra); }
+  .about-body p {
+    font-family: var(--serif);
+    font-size: clamp(20px, 2vw, 24px);
+    line-height: 1.5;
+    color: var(--ink-2);
+    margin: 0 0 22px;
+    max-width: 56ch;
+    text-wrap: pretty;
+  }
+  .about-body p:last-child { margin-bottom: 0; }
+  .about-body .accent { color: var(--terra); font-style: italic; }
+
+  .skills {
+    margin-top: 48px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .skill {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--ink-2);
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 8px 14px;
+  }
+
+  /* ─── Experience timeline ──────────────────────────────────── */
+  .timeline-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 60px;
+  }
+  .timeline-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1;
+    margin: 18px 0 0;
+    color: var(--ink);
+  }
+  .timeline-title .italic { font-style: italic; color: var(--terra); }
+  .timeline-sub {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 28ch;
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 32px;
+  }
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 7px;
+    top: 6px;
+    bottom: 6px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--terra) 0%, var(--terra) 30%, var(--line) 100%);
+    transform-origin: top;
+    transform: scaleY(0);
+    transition: transform 1800ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .timeline.in::before { transform: scaleY(1); }
+
+  .tl-item {
+    position: relative;
+    padding: 0 0 56px 36px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 700ms ease, transform 700ms ease;
+  }
+  .tl-item.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .tl-item:last-child { padding-bottom: 0; }
+
+  .tl-dot {
+    position: absolute;
+    left: -32px;
+    top: 6px;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    transition: border-color 240ms ease, background 240ms ease, box-shadow 240ms ease;
+  }
+  .tl-item.in .tl-dot {
+    border-color: var(--terra);
+  }
+  .tl-item.current .tl-dot {
+    background: var(--terra);
+    border-color: var(--terra);
+    box-shadow: 0 0 0 4px rgba(184, 68, 45, 0.15);
+  }
+  .tl-item.current .tl-dot::after {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: var(--paper);
+  }
+
+  .tl-when {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--terra);
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .tl-when .current-tag {
+    font-size: 10px;
+    background: var(--terra);
+    color: var(--paper);
+    padding: 2px 8px;
+    border-radius: 999px;
+    letter-spacing: 0.08em;
+  }
+  .tl-role {
+    font-family: var(--serif);
+    font-size: clamp(26px, 3vw, 36px);
+    line-height: 1.1;
+    margin: 0 0 4px;
+    color: var(--ink);
+  }
+  .tl-org {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--muted);
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  .tl-body {
+    color: var(--ink-2);
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 58ch;
+    margin: 0 0 14px;
+    text-wrap: pretty;
+  }
+  .tl-highlights {
+    list-style: none;
+    padding: 0;
+    margin: 14px 0 0;
+    display: grid;
+    gap: 6px;
+    max-width: 58ch;
+  }
+  .tl-highlights li {
+    font-size: 14.5px;
+    color: var(--muted);
+    padding-left: 18px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .tl-highlights li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: 8px;
+    height: 1px;
+    background: var(--terra-soft);
+  }
+
+  /* ─── Education + Languages ────────────────────────────────── */
+  .twocol {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-top: 60px;
+  }
+  @media (max-width: 760px) {
+    .twocol { grid-template-columns: 1fr; gap: 60px; }
+  }
+  .twocol h3 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(28px, 3.4vw, 40px);
+    line-height: 1;
+    margin: 16px 0 24px;
+  }
+  .twocol h3 .italic { font-style: italic; color: var(--terra); }
+
+  .edu-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 28px 30px;
+    position: relative;
+  }
+  .edu-card::after {
+    content: "";
+    position: absolute;
+    top: 12px; right: 12px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--terra);
+    opacity: 0.6;
+  }
+  .edu-year {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--terra);
+    font-weight: 500;
+  }
+  .edu-degree {
+    font-family: var(--serif);
+    font-size: 26px;
+    line-height: 1.15;
+    margin: 6px 0 4px;
+    color: var(--ink);
+  }
+  .edu-school {
+    font-style: italic;
+    color: var(--muted);
+    font-family: var(--serif);
+    font-size: 17px;
+  }
+  .edu-note {
+    margin-top: 16px;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+
+  .lang-list { display: grid; gap: 24px; }
+  .lang-row {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 18px;
+    align-items: center;
+  }
+  .lang-name {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--ink);
+  }
+  .lang-flag {
+    width: 28px; height: 20px;
+    border-radius: 2px;
+    overflow: hidden;
+    display: inline-block;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.06);
+    flex-shrink: 0;
+  }
+  .lang-level {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .lang-bar {
+    height: 2px;
+    background: var(--line);
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+  }
+  .lang-bar::after {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: var(--pct, 50%);
+    background: var(--terra);
+    transform-origin: left;
+    transform: scaleX(0);
+    transition: transform 1400ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .lang-list.in .lang-bar::after { transform: scaleX(1); }
+
+  .lang-extras {
+    display: flex;
+    gap: 24px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px dashed var(--line);
+    flex-wrap: wrap;
+  }
+  .lang-extra {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .lang-extra .k {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+  }
+  .lang-extra .v {
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--ink);
+  }
+
+  /* ─── Contact ─────────────────────────────────────────────── */
+  .contact {
+    padding-bottom: 120px;
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-top: 40px;
+    align-items: start;
+  }
+  @media (max-width: 760px) {
+    .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+  }
+  .contact-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(44px, 6vw, 84px);
+    line-height: 0.95;
+    margin: 20px 0 28px;
+    letter-spacing: -0.01em;
+  }
+  .contact-title .italic { font-style: italic; color: var(--terra); }
+  .contact-blurb {
+    font-family: var(--serif);
+    font-size: 22px;
+    line-height: 1.4;
+    color: var(--ink-2);
+    max-width: 32ch;
+    margin: 0 0 32px;
+  }
+  .contact-direct {
+    display: grid;
+    gap: 14px;
+    margin-top: 8px;
+  }
+  .contact-direct a {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--ink-2);
+    font-size: 15px;
+    transition: color 180ms ease, gap 220ms ease;
+  }
+  .contact-direct a:hover { color: var(--terra); gap: 16px; }
+  .contact-direct svg { flex-shrink: 0; }
+
+  .form {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 32px;
+    display: grid;
+    gap: 18px;
+  }
+  .field { display: grid; gap: 6px; }
+  .field label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .field input, .field textarea {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 8px 0 10px;
+    font: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    outline: none;
+    border-radius: 0;
+    transition: border-color 200ms ease;
+    font-family: var(--sans);
+  }
+  .field input:focus, .field textarea:focus {
+    border-bottom-color: var(--terra);
+  }
+  .field textarea {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.5;
+  }
+  .field.invalid input,
+  .field.invalid textarea {
+    border-bottom-color: var(--terra-deep);
+  }
+  .field .err {
+    font-size: 12px;
+    color: var(--terra-deep);
+    display: none;
+  }
+  .field.invalid .err { display: block; }
+
+  .submit {
+    appearance: none;
+    background: var(--terra);
+    color: var(--paper);
+    border: 0;
+    padding: 14px 22px;
+    font: inherit;
+    font-weight: 500;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    cursor: pointer;
+    justify-self: start;
+    transition: background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .submit:hover {
+    background: var(--terra-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px -8px rgba(142, 47, 28, 0.5);
+  }
+  .submit:active { transform: translateY(0); }
+  .submit svg { transition: transform 200ms ease; }
+  .submit:hover svg { transform: translateX(3px); }
+  .submit.sent { background: var(--sage); }
+  .form-note {
+    font-size: 12px;
+    color: var(--muted-2);
+    margin: -4px 0 0;
+  }
+
+  /* ─── Footer ─────────────────────────────────────────────── */
+  footer {
+    padding: 40px var(--pad-x) 60px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    font-size: 12px;
+    color: var(--muted-2);
+    max-width: var(--maxw);
+    margin: 0 auto;
+    letter-spacing: 0.04em;
+    position: relative;
+    z-index: 1;
+  }
+  footer .right { display: flex; gap: 18px; }
+  footer a:hover { color: var(--terra); }
+
+  /* Reveal helper */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 800ms cubic-bezier(0.2, 0.7, 0.2, 1), transform 800ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a class="mark" href="#top">
+    <span class="dot"></span>
+    Tatiana <span style="font-style: normal; color: var(--muted);">Villa-Montoya</span>
+  </a>
+  <div class="nav-right">
+    <div class="nav-links">
+      <a href="#about" data-en="About" data-es="Sobre mí">About</a>
+      <a href="#experience" data-en="Experience" data-es="Experiencia">Experience</a>
+      <a href="#languages" data-en="Languages" data-es="Idiomas">Languages</a>
+      <a href="#contact" data-en="Contact" data-es="Contacto">Contact</a>
+    </div>
+    <div class="lang-toggle" id="langToggle" data-lang="en" role="tablist" aria-label="Language">
+      <span class="pill" aria-hidden="true"></span>
+      <button data-lang="en" class="active" type="button">EN</button>
+      <button data-lang="es" type="button">ES</button>
+    </div>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- ─── Hero ───────────────────────────────────────────── -->
+  <section class="hero" id="hero">
+    <div class="hero-grid">
+      <div>
+        <h1 class="reveal">
+          <span data-en="Tatiana" data-es="Tatiana">Tatiana</span><br/>
+          <span class="italic" data-en="Villa-Montoya." data-es="Villa-Montoya.">Villa-Montoya.</span>
+        </h1>
+      </div>
+      <div>
+        <p class="lede reveal"
+           data-en="Bilingual operations &amp; content professional — bridging literature, sales, and capital markets."
+           data-es="Profesional bilingüe en operaciones y contenido — tendiendo puentes entre la literatura, las ventas y los mercados de capital.">
+          Bilingual operations &amp; content professional — bridging literature, sales, and capital markets.
+        </p>
+        <div class="meta reveal" style="margin-top: 28px;">
+          <span data-en="Currently" data-es="Actualmente">Currently</span>
+          <strong data-en="Capital Markets Support Analyst at Roots Management Group"
+                  data-es="Analista de Soporte en Mercados de Capital en Roots Management Group">
+            Capital Markets Support Analyst at Roots Management Group
+          </strong>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ─── About ──────────────────────────────────────────── -->
+  <section id="about">
+    <div class="about-grid">
+      <div>
+        <span class="eyebrow reveal" data-en="About" data-es="Sobre mí">About</span>
+        <h2 class="about-title reveal">
+          <span data-en="A career built" data-es="Una carrera construida">A career built</span><br/>
+          <span class="italic" data-en="across languages." data-es="entre idiomas.">across languages.</span>
+        </h2>
+      </div>
+      <div class="about-body">
+        <p class="reveal"
+           data-en="I'm a bilingual professional with a background in <span class='accent'>Hispanic literature</span>, and a career that spans content production, retail management, B2B sales, and capital markets operations."
+           data-es="Soy una profesional bilingüe con formación en <span class='accent'>literatura hispánica</span>, y una carrera que abarca producción de contenido, gestión retail, ventas B2B y operaciones en mercados de capital.">
+          I'm a bilingual professional with a background in <span class="accent">Hispanic literature</span>, and a career that spans content production, retail management, B2B sales, and capital markets operations.
+        </p>
+        <p class="reveal"
+           data-en="The constant throughout: clear communication, careful organization, and the ability to build trust with people on both sides of a conversation — whether that's a Spanish-speaking customer in Florida, a contractor in Texas, or a lender in New York."
+           data-es="El hilo conductor: comunicación clara, organización meticulosa y la capacidad de generar confianza a ambos lados de una conversación — ya sea con un cliente hispanohablante en Florida, un contratista en Texas o un prestamista en Nueva York.">
+          The constant throughout: clear communication, careful organization, and the ability to build trust with people on both sides of a conversation — whether that's a Spanish-speaking customer in Florida, a contractor in Texas, or a lender in New York.
+        </p>
+        <p class="reveal"
+           data-en="I'm drawn to roles where structure meets storytelling — where the details matter and the people on the other end do too."
+           data-es="Me atraen los roles donde la estructura se encuentra con la narrativa — donde los detalles importan y las personas al otro lado también.">
+          I'm drawn to roles where structure meets storytelling — where the details matter and the people on the other end do too.
+        </p>
+
+        <div class="skills reveal">
+          <span class="skill" data-en="Bilingual EN/ES" data-es="Bilingüe EN/ES">Bilingual EN/ES</span>
+          <span class="skill" data-en="Team management" data-es="Gestión de equipos">Team management</span>
+          <span class="skill" data-en="Sales strategy" data-es="Estrategia de ventas">Sales strategy</span>
+          <span class="skill" data-en="Project coordination" data-es="Coordinación de proyectos">Project coordination</span>
+          <span class="skill" data-en="CRM operations" data-es="Operaciones CRM">CRM operations</span>
+          <span class="skill" data-en="Voice-over" data-es="Locución">Voice-over</span>
+          <span class="skill" data-en="Research &amp; writing" data-es="Investigación y redacción">Research &amp; writing</span>
+          <span class="skill" data-en="Translation" data-es="Traducción">Translation</span>
+          <span class="skill" data-en="Public speaking" data-es="Oratoria">Public speaking</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Experience ─────────────────────────────────────── -->
+  <section id="experience">
+    <div class="timeline-head">
+      <div>
+        <span class="eyebrow reveal" data-en="Experience" data-es="Experiencia">Experience</span>
+        <h2 class="timeline-title reveal">
+          <span data-en="Six years," data-es="Seis años,">Six years,</span>
+          <span class="italic" data-en="four chapters." data-es="cuatro capítulos.">four chapters.</span>
+        </h2>
+      </div>
+      <p class="timeline-sub reveal"
+         data-en=""
+         data-es="">
+      </p>
+    </div>
+
+    <div class="timeline" id="timeline">
+
+      <div class="tl-item current">
+        <span class="tl-dot" aria-hidden="true"></span>
+        <div class="tl-when">
+          <span data-en="2024 — Present" data-es="2024 — Presente">2024 — Present</span>
+          <span class="current-tag" data-en="Now" data-es="Ahora">Now</span>
+        </div>
+        <h3 class="tl-role" data-en="Capital Markets Support Analyst"
+                            data-es="Analista de Soporte en Mercados de Capital">
+          Capital Markets Support Analyst
+        </h3>
+        <div class="tl-org">Roots Management Group</div>
+        <p class="tl-body"
+           data-en="Partnering with CAPEX project managers to drive lender-required repair items and capital improvement projects from intake to closure."
+           data-es="Trabajando junto a gerentes de proyectos CAPEX para llevar las reparaciones requeridas por prestamistas y los proyectos de mejora de capital desde la solicitud hasta el cierre.">
+          Partnering with CAPEX project managers to drive lender-required repair items and capital improvement projects from intake to closure.
+        </p>
+        <ul class="tl-highlights">
+          <li data-en="Own the end-to-end lender submittal process — invoices, proof of payment, photos, inspection reports."
+              data-es="A cargo del proceso completo de entregas a prestamistas — facturas, comprobantes, fotos y reportes de inspección.">
+            Own the end-to-end lender submittal process — invoices, proof of payment, photos, inspection reports.
+          </li>
+          <li data-en="Coordinate across contractors, inspectors, and lenders to keep repair milestones on schedule."
+              data-es="Coordino con contratistas, inspectores y prestamistas para mantener los hitos de reparación en cronograma.">
+            Coordinate across contractors, inspectors, and lenders to keep repair milestones on schedule.
+          </li>
+          <li data-en="Maintain operational reports that give the CAPEX team and executives a single source of truth."
+              data-es="Mantengo reportes operativos que dan al equipo CAPEX y a la dirección una única fuente de verdad.">
+            Maintain operational reports that give the CAPEX team and executives a single source of truth.
+          </li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <span class="tl-dot" aria-hidden="true"></span>
+        <div class="tl-when">
+          <span data-en="2022 — 2024" data-es="2022 — 2024">2022 — 2024</span>
+        </div>
+        <h3 class="tl-role" data-en="Inside Sales Agent" data-es="Agente de Ventas Internas">Inside Sales Agent</h3>
+        <div class="tl-org">Green Dynamix</div>
+        <p class="tl-body"
+           data-en="Supported a Senior Account Executive across 70+ accounts in Florida, South Carolina and Georgia — handling commercial and residential projects up to $750K."
+           data-es="Apoyé a un Senior Account Executive en más de 70 cuentas en Florida, Carolina del Sur y Georgia — gestionando proyectos comerciales y residenciales de hasta $750K.">
+          Supported a Senior Account Executive across 70+ accounts in Florida, South Carolina and Georgia — handling commercial and residential projects up to $750K.
+        </p>
+        <ul class="tl-highlights">
+          <li data-en="Owned 25 projects end-to-end, hitting margin targets and managing budgets through 12-month timelines."
+              data-es="Lideré 25 proyectos de principio a fin, cumpliendo márgenes objetivo y gestionando presupuestos en cronogramas de hasta 12 meses.">
+            Owned 25 projects end-to-end, hitting margin targets and managing budgets through 12-month timelines.
+          </li>
+          <li data-en="Brought on 10 new clients by owning the relationship with non-English speaking customers."
+              data-es="Sumé 10 nuevos clientes al hacerme cargo de la relación con clientes no angloparlantes.">
+            Brought on 10 new clients by owning the relationship with non-English speaking customers.
+          </li>
+          <li data-en="Coordinated across purchasing, operations and distribution to push last-minute order changes through clean."
+              data-es="Coordiné entre compras, operaciones y distribución para resolver cambios de último minuto sin fricción.">
+            Coordinated across purchasing, operations and distribution to push last-minute order changes through clean.
+          </li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <span class="tl-dot" aria-hidden="true"></span>
+        <div class="tl-when">
+          <span data-en="2020 — 2022" data-es="2020 — 2022">2020 — 2022</span>
+        </div>
+        <h3 class="tl-role" data-en="Writer &amp; Producer" data-es="Escritora y Productora">Writer &amp; Producer</h3>
+        <div class="tl-org">Medellín AV Club Company</div>
+        <p class="tl-body"
+           data-en="Wrote and produced bilingual video content for a Medellín-based studio — scripting 50+ pieces for marketing series across social, web and video channels."
+           data-es="Escribí y produje contenido bilingüe en video para un estudio de Medellín — guionizando más de 50 piezas para series de marketing en redes, web y canales de video.">
+          Wrote and produced bilingual video content for a Medellín-based studio — scripting 50+ pieces for marketing series across social, web and video channels.
+        </p>
+        <ul class="tl-highlights">
+          <li data-en="Directed scripts and recording sessions in both English and Spanish."
+              data-es="Dirigí guiones y sesiones de grabación en inglés y español.">
+            Directed scripts and recording sessions in both English and Spanish.
+          </li>
+          <li data-en="Ran research to make sure every piece held up factually before it shipped."
+              data-es="Hice investigación rigurosa para que cada pieza fuera sólida antes de salir.">
+            Ran research to make sure every piece held up factually before it shipped.
+          </li>
+        </ul>
+      </div>
+
+      <div class="tl-item">
+        <span class="tl-dot" aria-hidden="true"></span>
+        <div class="tl-when">
+          <span data-en="2019 — 2022" data-es="2019 — 2022">2019 — 2022</span>
+        </div>
+        <h3 class="tl-role" data-en="General Manager" data-es="Gerente General">General Manager</h3>
+        <div class="tl-org">LaFond Medellín</div>
+        <p class="tl-body"
+           data-en="Ran a three-storefront fashion atelier in Medellín — built training programs, bilingual sales strategies, and audiovisual storytelling for each collection launch."
+           data-es="Dirigí un atelier de moda con tres tiendas en Medellín — armé programas de entrenamiento, estrategias bilingües de ventas y narrativa audiovisual para cada lanzamiento de colección.">
+          Ran a three-storefront fashion atelier in Medellín — built training programs, bilingual sales strategies, and audiovisual storytelling for each collection launch.
+        </p>
+        <ul class="tl-highlights">
+          <li data-en="Designed training programs that lifted both performance and job satisfaction across the floor team."
+              data-es="Diseñé programas de entrenamiento que elevaron desempeño y satisfacción en el equipo.">
+            Designed training programs that lifted both performance and job satisfaction across the floor team.
+          </li>
+          <li data-en="Produced content showcasing the Colombian textile market — turning local craft into a brand story."
+              data-es="Produje contenido que destacaba el mercado textil colombiano — convirtiendo el oficio local en relato de marca.">
+            Produced content showcasing the Colombian textile market — turning local craft into a brand story.
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── Education + Languages ─────────────────────────── -->
+  <section id="languages">
+    <div class="twocol">
+      <div>
+        <span class="eyebrow reveal" data-en="Education" data-es="Educación">Education</span>
+        <h3 class="reveal">
+          <span data-en="The" data-es="El">The</span>
+          <span class="italic" data-en="foundation." data-es="punto de partida.">foundation.</span>
+        </h3>
+        <div class="edu-card reveal">
+          <div class="edu-year">2020</div>
+          <div class="edu-degree" data-en="B.A. Hispanic Literature" data-es="Lic. Literatura Hispánica">B.A. Hispanic Literature</div>
+          <div class="edu-school">Pontifical Bolivarian University · Medellín</div>
+          <p class="edu-note"
+             data-en="Background in research, writing, public speaking, and translation — the discipline behind every role since."
+             data-es="Formación en investigación, redacción, oratoria y traducción — la disciplina detrás de cada rol desde entonces.">
+            Background in research, writing, public speaking, and translation — the discipline behind every role since.
+          </p>
+        </div>
+      </div>
+
+      <div>
+        <span class="eyebrow reveal" data-en="Languages" data-es="Idiomas">Languages</span>
+        <h3 class="reveal">
+          <span data-en="Two languages," data-es="Dos idiomas,">Two languages,</span>
+          <span class="italic" data-en="one register." data-es="un solo registro.">one register.</span>
+        </h3>
+        <div class="lang-list reveal" id="langList">
+
+          <div class="lang-row">
+            <span class="lang-name" data-en="Spanish" data-es="Español">Spanish</span>
+            <div>
+              <div class="lang-bar" style="--pct: 100%;"></div>
+            </div>
+            <span class="lang-level" data-en="Native" data-es="Nativo">Native</span>
+          </div>
+
+          <div class="lang-row">
+            <span class="lang-name" data-en="English" data-es="Inglés">English</span>
+            <div>
+              <div class="lang-bar" style="--pct: 92%;"></div>
+            </div>
+            <span class="lang-level" data-en="Advanced — written &amp; spoken"
+                                    data-es="Avanzado — escrito y hablado">Advanced — written &amp; spoken</span>
+          </div>
+
+        </div>
+
+        <div class="lang-extras reveal">
+          <div class="lang-extra">
+            <span class="k" data-en="Specialty" data-es="Especialidad">Specialty</span>
+            <span class="v" data-en="Bilingual voice-over" data-es="Locución bilingüe">Bilingual voice-over</span>
+          </div>
+          <div class="lang-extra">
+            <span class="k" data-en="Also" data-es="Además">Also</span>
+            <span class="v" data-en="Translation &amp; copy" data-es="Traducción y copy">Translation &amp; copy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Contact ────────────────────────────────────────── -->
+  <section id="contact" class="contact">
+    <div class="contact-grid">
+      <div>
+        <span class="eyebrow reveal" data-en="Contact" data-es="Contacto">Contact</span>
+        <h2 class="contact-title reveal">
+          <span data-en="Let's" data-es="Conver-">Let's</span><br/>
+          <span class="italic" data-en="talk." data-es="semos.">talk.</span>
+        </h2>
+        <p class="contact-blurb reveal"
+           data-en="Open to roles in operations, project coordination, bilingual sales, or content. Send a note — I reply quickly."
+           data-es="Abierta a roles en operaciones, coordinación de proyectos, ventas bilingües o contenido. Escríbeme — respondo rápido.">
+          Open to roles in operations, project coordination, bilingual sales, or content. Send a note — I reply quickly.
+        </p>
+        <div class="contact-direct reveal">
+          <a href="/cdn-cgi/l/email-protection#ef9b8e9986828081dbdedaaf88828e8683c18c8082">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="1.5" y="3" width="13" height="10" rx="1.5" stroke="currentColor"/>
+              <path d="M2 4l6 5 6-5" stroke="currentColor" stroke-linecap="round"/>
+            </svg>
+            <span class="__cf_email__" data-cfemail="4f3b2e39262220217b7e7a0f28222e2623612c2022">[email&#160;protected]</span>
+          </a>
+          <a href="tel:+573187041514">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 2.5C3 2.5 4 2 5 2.5L6.5 5C6.5 5 6 6 5.5 6.5C5 7 5.5 8 6.5 9C7.5 10 8.5 10.5 9 10C9.5 9.5 10.5 9 10.5 9L13 10.5C13.5 11.5 13 12.5 13 12.5C12 13.5 10.5 14 8 12.5C5.5 11 4 9.5 2.5 7C1 4.5 1.5 3.5 3 2.5Z" stroke="currentColor" stroke-linejoin="round"/>
+            </svg>
+            +57 (318) 704-1514
+          </a>
+          <a href="https://www.linkedin.com/in/tatiana-villamontoya" target="_blank" rel="noreferrer">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <rect x="1.5" y="1.5" width="13" height="13" rx="1.5" stroke="currentColor"/>
+              <path d="M4.5 6.5v5M4.5 4.5v.5M7 11.5v-3c0-1 1-2 2-2s2 1 2 2v3M7 6.5v5" stroke="currentColor" stroke-linecap="round"/>
+            </svg>
+            linkedin.com/in/tatiana-villamontoya
+          </a>
+        </div>
+      </div>
+
+      <form class="form reveal" id="contactForm" novalidate>
+        <div class="field" data-field="name">
+          <label for="f-name" data-en="Your name" data-es="Tu nombre">Your name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" />
+          <span class="err" data-en="Please add your name." data-es="Por favor añade tu nombre.">Please add your name.</span>
+        </div>
+        <div class="field" data-field="email">
+          <label for="f-email" data-en="Email" data-es="Correo">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" />
+          <span class="err" data-en="Please enter a valid email." data-es="Por favor ingresa un correo válido.">Please enter a valid email.</span>
+        </div>
+        <div class="field" data-field="message">
+          <label for="f-message" data-en="Message" data-es="Mensaje">Message</label>
+          <textarea id="f-message" name="message" rows="4"></textarea>
+          <span class="err" data-en="Tell me a little about what you have in mind." data-es="Cuéntame un poco de lo que tienes en mente.">Tell me a little about what you have in mind.</span>
+        </div>
+        <p class="form-note"
+           data-en="This will open your email app pre-filled — no data leaves your device."
+           data-es="Esto abrirá tu app de correo con el mensaje listo — ningún dato sale de tu dispositivo.">
+          This will open your email app pre-filled — no data leaves your device.
+        </p>
+        <button class="submit" type="submit">
+          <span data-en="Send message" data-es="Enviar mensaje">Send message</span>
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div>
+    <span data-en="© 2026 Tatiana Villa-Montoya" data-es="© 2026 Tatiana Villa-Montoya">© 2026 Tatiana Villa-Montoya</span>
+  </div>
+  <div class="right">
+    <span data-en="Made in Medellín" data-es="Hecho en Medellín">Made in Medellín</span>
+    <span>·</span>
+    <a href="/cdn-cgi/l/email-protection#156174637c787a7b212420557278747c793b767a78"><span class="__cf_email__" data-cfemail="572336213e3a383963666217303a363e3b7934383a">[email&#160;protected]</span></a>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ─── Language toggle ────────────────────────────────────
+  (function () {
+    const toggle = document.getElementById('langToggle');
+    const buttons = toggle.querySelectorAll('button');
+    const stored = localStorage.getItem('tvm-lang') || 'en';
+    let current = stored;
+
+    function applyLang(lang) {
+      current = lang;
+      document.documentElement.lang = lang;
+      toggle.dataset.lang = lang;
+      buttons.forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+
+      // Walk all elements with both data-en and data-es
+      document.querySelectorAll('[data-en]').forEach(el => {
+        const value = el.dataset[lang];
+        if (value === undefined) return;
+        // Allow HTML inside translations (used in About body)
+        if (value.includes('<')) {
+          el.innerHTML = value;
+        } else {
+          // Preserve child HTML structure when possible by using textContent on leaf-ish nodes
+          // If element has children other than text, only update if no children
+          if (el.children.length === 0) {
+            el.textContent = value;
+          } else {
+            el.innerHTML = value;
+          }
+        }
+      });
+      localStorage.setItem('tvm-lang', lang);
+    }
+
+    buttons.forEach(b => {
+      b.addEventListener('click', () => applyLang(b.dataset.lang));
+    });
+
+    // Apply stored lang on load
+    if (stored !== 'en') applyLang(stored);
+  })();
+
+  // ─── Nav scrolled state ─────────────────────────────────
+  (function () {
+    const nav = document.getElementById('nav');
+    const onScroll = () => {
+      nav.classList.toggle('scrolled', window.scrollY > 24);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+
+  // ─── Reveal on scroll ───────────────────────────────────
+  (function () {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Timeline: stagger the items
+    const timeline = document.getElementById('timeline');
+    const items = timeline.querySelectorAll('.tl-item');
+    const tlObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          timeline.classList.add('in');
+          items.forEach((it, i) => {
+            setTimeout(() => it.classList.add('in'), 200 + i * 220);
+          });
+          tlObs.disconnect();
+        }
+      });
+    }, { threshold: 0.1 });
+    tlObs.observe(timeline);
+  })();
+
+  // ─── Hero entrance ──────────────────────────────────────
+  window.addEventListener('load', () => {
+    document.querySelectorAll('.hero .reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('in'), 120 + i * 140);
+    });
+  });
+
+  // ─── Contact form ───────────────────────────────────────
+  (function () {
+    const form = document.getElementById('contactForm');
+    const submit = form.querySelector('.submit');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const fields = form.querySelectorAll('.field');
+      let valid = true;
+      fields.forEach(f => f.classList.remove('invalid'));
+
+      const name = form.querySelector('#f-name').value.trim();
+      const email = form.querySelector('#f-email').value.trim();
+      const message = form.querySelector('#f-message').value.trim();
+
+      if (!name) { form.querySelector('[data-field=name]').classList.add('invalid'); valid = false; }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        form.querySelector('[data-field=email]').classList.add('invalid'); valid = false;
+      }
+      if (!message) { form.querySelector('[data-field=message]').classList.add('invalid'); valid = false; }
+
+      if (!valid) return;
+
+      const lang = localStorage.getItem('tvm-lang') || 'en';
+      const subjectEn = `Hello from ${name} — via your site`;
+      const subjectEs = `Hola de ${name} — desde tu sitio`;
+      const subject = lang === 'es' ? subjectEs : subjectEn;
+      const body = `${message}\n\n—\n${name}\n${email}`;
+      const mailto = `mailto:tavimon415@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+      window.location.href = mailto;
+
+      submit.classList.add('sent');
+      const span = submit.querySelector('span');
+      const original = span.textContent;
+      span.textContent = lang === 'es' ? 'Abriendo correo…' : 'Opening mail…';
+      setTimeout(() => {
+        span.textContent = original;
+        submit.classList.remove('sent');
+        form.reset();
+      }, 2400);
+    });
+  })();
+</script>
+
+</body>
+</html>
